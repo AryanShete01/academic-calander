@@ -3,9 +3,11 @@ import {
   getAuth,
   GoogleAuthProvider,
   onAuthStateChanged,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut,
 } from "firebase/auth";
+
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -18,9 +20,18 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-export const loginWithGoogle = () => signInWithPopup(auth, provider);
+export const loginWithGoogle = () => {
+  return signInWithRedirect(auth, provider);
+};
+
 export const logout = () => signOut(auth);
+
 export const subscribeToAuthChanges = (callback: any) =>
   onAuthStateChanged(auth, callback);
+
+getRedirectResult(auth).catch((error) => {
+  console.error("Google redirect login error:", error);
+});
+
 
 
